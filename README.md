@@ -24,6 +24,8 @@ Szegedy et al. 2014, Going deeper with convolutions: https://arxiv.org/pdf/1409.
 
 
 ```python
+!pip install fast_layers
+
 # Imports and preprocessing
 import fast_layers as fl
 import tensorflow as tf
