@@ -25,7 +25,7 @@ Szegedy et al. 2014, Going deeper with convolutions: https://arxiv.org/pdf/1409.
 
 ```python
 # Imports and preprocessing
-import fast-layers as fl
+import fast_layers as fl
 import tensorflow as tf
 import tensorflow_datasets as tfds
 
@@ -50,39 +50,68 @@ ds_test = ds_test.batch(128)
 ```
 
 ```python
-# Create the inception module with Fast-Layers
 N_FILTERS = 16
 PADDING = 'same'
 
-inception_module_0 = fl.FastLayer()
-inception_module_0.pipes = [
-    fl.Pipe('c1', is_input_layer=True, sequential = [
+inception_module = fl.Layer()
+sequences = [
+    fl.Sequence('c1', 'input', sequence = [
         tf.keras.layers.Conv2D(N_FILTERS, (1,1), padding=PADDING)
-    ], output_identifiers=['concat']),
-    fl.Pipe('c1_c3', is_input_layer=True, sequential = [
+    ]),
+    fl.Sequence('c1_c3', 'input', sequence = [
         tf.keras.layers.Conv2D(N_FILTERS, (1,1), padding=PADDING),
         tf.keras.layers.Conv2D(N_FILTERS, (3,3), padding=PADDING)
-    ], output_identifiers=['concat']),
-    fl.Pipe('c1_c5', is_input_layer=True, sequential = [
+    ]),
+    fl.Sequence('c1_c5', 'input', sequence = [
         tf.keras.layers.Conv2D(N_FILTERS, (1,1), padding=PADDING),
         tf.keras.layers.Conv2D(N_FILTERS, (5,5), padding=PADDING)
-    ], output_identifiers=['concat']),
-    fl.Pipe('maxpool3_c1', is_input_layer=True, sequential = [
+    ]),
+    fl.Sequence('maxpool3_c1', 'input', sequence = [
         tf.keras.layers.Conv2D(N_FILTERS, (3,3), padding=PADDING),
         tf.keras.layers.Conv2D(N_FILTERS, (1,1), padding=PADDING)
-    ], output_identifiers=['concat']),
+    ]),
+    fl.Sequence('concat', ['c1','c1_c3','c1_c5','maxpool3_c1'], 
+             is_output_layer=True,
+             sequence=[
+                 tf.keras.layers.Concatenate(axis=-1)])
+]
+inception_module.init_layer(sequences)
+```
+
+```python
+# A Layer can also be called like this:
+sequences_2 = [
+    fl.Sequence('c1', 'input', sequence = [
+        tf.keras.layers.Conv2D(N_FILTERS, (1,1), padding=PADDING)
+    ]),
+    fl.Sequence('c1_c3', 'input', sequence = [
+        tf.keras.layers.Conv2D(N_FILTERS, (1,1), padding=PADDING),
+        tf.keras.layers.Conv2D(N_FILTERS, (3,3), padding=PADDING)
+    ]),
+    fl.Sequence('c1_c5', 'input', sequence = [
+        tf.keras.layers.Conv2D(N_FILTERS, (1,1), padding=PADDING),
+        tf.keras.layers.Conv2D(N_FILTERS, (5,5), padding=PADDING)
+    ]),
+    fl.Sequence('maxpool3_c1', 'input', sequence = [
+        tf.keras.layers.Conv2D(N_FILTERS, (3,3), padding=PADDING),
+        tf.keras.layers.Conv2D(N_FILTERS, (1,1), padding=PADDING)
+    ]),
+    fl.Sequence('concat', ['c1','c1_c3','c1_c5','maxpool3_c1'], 
+             is_output_layer=True,
+             sequence=[
+                 tf.keras.layers.Concatenate(axis=-1)])
 ]
 
-inception_module_0.connectors = [
-    fl.Connector('concat', 4, is_output_layer=True, sequential=[tf.keras.layers.Concatenate(axis=-1)])
-]
-inception_module_0.build_layer()
+
+inception_module_2 = fl.Layer(sequence = sequences_2)
+
 ```
 
 ```python
 # Create and train the model
 model = tf.keras.models.Sequential([
-    inception_module_0,
+    inception_module,
+    inception_module_2,
     tf.keras.layers.Flatten(),
     tf.keras.layers.Dense(128,activation='relu'),
     tf.keras.layers.Dense(10, activation='softmax')
@@ -98,6 +127,7 @@ history = model.fit(
     ds_train,
     epochs=6,
     validation_data=ds_test,
+    verbose=2
 )
 
 ```
