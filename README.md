@@ -1,5 +1,5 @@
-# Fast Layers
-Fast Layers is a python library for Keras and Tensorflow users: The fastest way to build complex deep neural network architectures with sequential models
+# Fast-Layers
+Fast-Layers is a python library for Keras and Tensorflow users: The fastest way to build complex deep neural network architectures with sequential models
 
 
 
@@ -18,17 +18,14 @@ I create fast-layers for beginners who wants to build more advanced networks and
 TRY IT YOURSELF: https://www.kaggle.com/alexandremahdhaoui/fast-layers-tutorial !
 
 original MNIST tutorial: https://www.tensorflow.org/datasets/keras_example
-
 Szegedy et al. 2014, Going deeper with convolutions: https://arxiv.org/pdf/1409.4842.pdf!
 
 ![szegedy et al 2014 Inception Module](https://user-images.githubusercontent.com/80970827/112069667-863ff780-8b6c-11eb-8c90-52c3cbc7917a.png)
 
 
 ```python
-!pip install fast_layers
-
 # Imports and preprocessing
-import fast_layers as fl
+import fast-layers as fl
 import tensorflow as tf
 import tensorflow_datasets as tfds
 
