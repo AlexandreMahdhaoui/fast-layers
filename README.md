@@ -8,9 +8,9 @@ https://pypi.org/project/fast_layers/
 Tensorflow's sequential model is a very intuitive way to start learning about Deep Neural Networks.
 However it is quite hard to dive into more complex networks without learning more about Keras.
 
-Well it won't be hard anymore with Fast-layers! Define your Sequences and to start building complex layers in a sequential fashion.
+Well it won't be hard anymore with Fast-layers! Define your Sequences and start building complex layers in a sequential fashion.
 
-I create fast-layers for beginners who wants to build more advanced networks and for experimented users who wants to quickly build and test complex module architectures.
+I created fast-layers for beginners who wants to build more advanced networks and for experimented users who needs to quickly build and test complex module architectures.
 
 # Documentation
 
