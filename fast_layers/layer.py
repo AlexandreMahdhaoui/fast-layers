@@ -10,7 +10,20 @@ class _Tracker:
 
 class Layer(tf.keras.layers.Layer):
     """
-
+    Arguments:
+        sequences: list of sequences,
+        trainable=True,
+        n_iteration_error=50: max number of iteration permitted in the computation loop before break
+    Attributes:
+        names: list of sequences names
+        trainable: True if the weights of this layer are trainable.
+        sequences: list of sequences
+        first_call=True: False means the Layer object has been called and
+        n_iteration_error: max number of iteration permitted in the computation loop before break
+    Methods:
+        init_layer(sequences): Takes a list of sequences and initialize the layer. Is called on __init__() if the layer
+                               object has been instantiate with the argument sequences=*List of sequences*
+        call(x, training=False): by calling the layer through __call__(), computes x.
     """
 
     def __init__(self, sequences=None, trainable=True, n_iteration_error=50):
@@ -39,13 +52,18 @@ class Layer(tf.keras.layers.Layer):
         self._compute_input_sequences(x, training=training)
         while not self._is_all_sequences_computed():
             for name in self.names:
-                self._compute_sequence(name, training=training)
-        return self._get_output()
+                if not self.__dict__[name + '_tracker'].is_output_layer:
+                    self._compute_sequence(name, training=training)
+        return self._get_output(training=training)
 
-    def _get_output(self):
+    def _get_output(self, training=False):
         for name in self.names:
-            if self.__dict__[name + '_tracker'].is_output_layer:
-                return self.__dict__[name + '_x']
+            tracker = self.__dict__[name + '_tracker']
+            sequence = self.__dict__[name]
+            if tracker.is_output_layer:
+                if self._check_inputs(tracker) and not tracker.is_computed:
+                    x = self._get_x(tracker)
+                    return sequence(x, training=training)
 
     def _compute_sequence(self, name, training=False):
         sequence = self.__dict__[name]
@@ -79,14 +97,15 @@ class Layer(tf.keras.layers.Layer):
         for name in self.names:
             sequence = self.__dict__[name]
             tracker = self.__dict__[name + '_tracker']
-            if tracker.inputs == 'input' and not tracker.is_computed:
+            if tracker.inputs == 'input' and not tracker.is_computed and not tracker.is_output_layer:
                 self.__dict__[name + '_x'] = sequence(x, training=training)
                 self.__dict__[name + '_tracker'].is_computed = True
 
     def _is_all_sequences_computed(self):
         for name in self.names:
-            if not self.__dict__[name + '_tracker'].is_computed:
-                return False
+            if not self.__dict__[name + '_tracker'].is_output_layer:
+                if not self.__dict__[name + '_tracker'].is_computed:
+                    return False
         return True
 
     def _check_loop_health(self, i):
@@ -104,7 +123,8 @@ class Layer(tf.keras.layers.Layer):
         i = 0
         while not self._is_all_sequences_computed():
             for name in self.names:
-                self._compute_sequence(name, training=training)
+                if not self.__dict__[name + '_tracker'].is_output_layer:
+                    self._compute_sequence(name, training=training)
             self._check_loop_health(i)
             i += 1
-        return self._get_output()
+        return self._get_output(training=training)

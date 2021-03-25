@@ -1,8 +1,6 @@
 # Fast-Layers
 Fast-Layers is a python library for Keras and Tensorflow users: The fastest way to build complex deep neural network architectures with sequential models
 
-
-
 ## Introduction
 Tensorflow's sequential model is a very intuitive way to start learning about Deep Neural Networks.
 However it is quite hard to dive into more complex networks without learning more about Keras.
@@ -11,13 +9,54 @@ Well it won't be hard anymore with Fast-layers! Define your Connectors and Pipes
 
 I create fast-layers for beginners who wants to build more advanced networks and for experimented users who wants to quickly build and test complex module architectures.
 
+# Documentation
+
+    Please note that eager execution is not supported for the moment
+
+#### class Sequence:
+    Arguments:
+        name: str, positional arg
+        inputs: str: name of input pipe/connector | list: names of input pipes/connectors, positional arg
+        sequence=None: list of keras.layers objects,
+        is_output_layer=False,
+        trainable=True,
+
+    Attributes:
+        inputs: str or list of input names.
+        sequence: list of keras.layers objects,
+        is_output_layer: True if this is the output Sequence of a Layer object.
+        
+    Methods:
+        call(x, training=False): by calling the sequence through __call__(), computes x.
+        self_build(): build the layers of the sequence into this Sequence object.
 
 
-## Fast Layer MNIST tutorial but using Inception modules
+#### class Layer:
+    Arguments:
+        sequences: list of sequences,
+        trainable=True,
+        n_iteration_error=50: max number of iteration permitted in the computation loop before break
 
-TRY IT YOURSELF: https://www.kaggle.com/alexandremahdhaoui/fast-layers-tutorial !
+    Attributes:
+        names: list of sequences names
+        trainable: True if the weights of this layer are trainable.
+        sequences: list of sequences
+        first_call=True: False means the Layer object has been called and
+        n_iteration_error: max number of iteration permitted in the computation loop before break
+
+    Methods:
+        init_layer(sequences): Takes a list of sequences and initialize the layer. Is called on __init__() if the layer
+                               object has been instantiate with the argument sequences=*List of sequences*
+        call(x, training=False): by calling the layer through __call__(), computes x.
+
+
+## TUTORIAL: MNIST classification using Inception modules with Fast-Layers
+
+### Try it yourself: https://www.kaggle.com/alexandremahdhaoui/fast-layers-tutorial !
+
 
 original MNIST tutorial: https://www.tensorflow.org/datasets/keras_example
+
 Szegedy et al. 2014, Going deeper with convolutions: https://arxiv.org/pdf/1409.4842.pdf!
 
 ![szegedy et al 2014 Inception Module](https://user-images.githubusercontent.com/80970827/112069667-863ff780-8b6c-11eb-8c90-52c3cbc7917a.png)
@@ -131,3 +170,4 @@ history = model.fit(
 )
 
 ```
+
