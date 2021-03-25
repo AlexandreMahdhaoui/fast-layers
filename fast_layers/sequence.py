@@ -1,7 +1,7 @@
-import tensorflow as tf
+from tensorflow.keras.layers import Layer as tflayer
 
 
-class Sequence(tf.keras.layers.Layer):
+class Sequence(tflayer):
     """
     Arguments:
         name: str, positional arg

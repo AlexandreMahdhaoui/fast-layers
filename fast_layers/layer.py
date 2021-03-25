@@ -1,4 +1,4 @@
-import tensorflow as tf
+from tensorflow.keras.layers import Layer as tflayer
 
 
 class _Tracker:
@@ -8,7 +8,7 @@ class _Tracker:
         self.is_computed = False
 
 
-class Layer(tf.keras.layers.Layer):
+class Layer(tflayer):
     """
     Arguments:
         sequences: list of sequences,
