@@ -1,2 +1,2 @@
-from layer import Layer
-from sequence import Sequence
+from fast_layers.layer import Layer
+from fast_layers.sequence import Sequence

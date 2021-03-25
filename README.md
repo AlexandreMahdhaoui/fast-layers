@@ -1,8 +1,9 @@
 # Fast-Layers
 Fast-Layers is a python library for Keras and Tensorflow users: The fastest way to build complex deep neural network architectures with sequential models
 
-!pip install fast_layers
-https://pypi.org/project/fast_layers/
+Installation: !pip install fast-layers
+
+https://pypi.org/project/fast-layers/
 
 ## Introduction
 Tensorflow's sequential model is a very intuitive way to start learning about Deep Neural Networks.
