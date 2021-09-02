@@ -15,7 +15,7 @@ I created fast-layers for beginners who wants to build more advanced networks an
 
 # Documentation
 
-    Please note that eager execution is not supported for the moment
+    Please note eager execution is not supported yet
 
 #### class Sequence:
     Arguments:
